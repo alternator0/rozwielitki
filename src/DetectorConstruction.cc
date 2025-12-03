@@ -12,6 +12,7 @@
 #include "G4Trd.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4VisAttributes.hh"
+#include <G4ThreeVector.hh>
 #include <array>
 
 namespace B1 {
@@ -405,6 +406,35 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
                     0,                                      //
                     checkOverlaps);                         //
                                                             //
+                                                            //
+  //
+  // Foundation pad
+  //
+  // properities of pad
+  G4ThreeVector padDimentions{8 * cm, 8 * cm, 2 * cm};
+  G4ThreeVector padPos{.0 / 2 * mm, .0 / 2 * mm,
+                       -(padDimentions.z() / 2. + shapeOuterdz / 2) * mm};
+  G4Material *padMat = nist->FindOrBuildMaterial("G4_A-150_TISSUE");
+  auto visAttributesPad =
+      new G4VisAttributes(G4Colour(0.3, 0.3, 0.3, 1.0)); // gray
+  visAttributesPad->SetVisibility(true);
+
+  // Pad shape, logical volume, physical volume
+
+  G4Box *solidPad = new G4Box("Pad", padDimentions.x() / 2,
+                              padDimentions.y() / 2, padDimentions.z() / 2);
+
+  G4LogicalVolume *logicPad = new G4LogicalVolume(solidPad, padMat, "Pad");
+  logicPad->SetVisAttributes(visAttributesPad);
+
+  new G4PVPlacement(nullptr,        // no rotation
+                    padPos,         // at position
+                    logicPad,       // its logical volume
+                    "Pad1",         // its name
+                    logicWorld,     // its mother  volume
+                    false,          // no boolean operation
+                    0,              // copy number
+                    checkOverlaps); // overlaps checking
 
   fScoringVolume = logicDaphnia1;
 

@@ -28,14 +28,16 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction() { delete fParticleGun; }
 
 // jest wywolywana na poczatku kazdej generacji czastki
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
-  G4double meanEnergy = 1500.0 * keV;
 
+  G4double meanEnergy = 1500.0 * keV;
+  // energia jest losowana zgodnie z rozkladem gausa
   G4double energy = CLHEP::RandGauss::shoot(meanEnergy, 1 * keV);
 
   fParticleGun->SetParticleEnergy(energy);
 
-  G4double xPos{(G4UniformRand() - 0.5) * 2};
-  G4double yPos{(G4UniformRand() - 0.5) * 2};
+  // ustawinie pozycji generatora
+  G4double xPos{(G4UniformRand() - 0.5) * 8};
+  G4double yPos{(G4UniformRand() - 0.5) * 8};
 
   G4ThreeVector position = G4ThreeVector(xPos * cm, yPos * cm, 5.0 * cm);
   fParticleGun->SetParticlePosition(position);
