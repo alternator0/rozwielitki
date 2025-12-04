@@ -1,12 +1,8 @@
-// przygotowanie pod zebranie danych
-
 #include "RunAction.hh"
 
 #include "G4AnalysisManager.hh"
 #include "G4Run.hh"
 #include "G4RunManager.hh"
-
-namespace B1 {
 
 // uruchamia sie na starcie programu
 RunAction::RunAction() {
@@ -50,5 +46,3 @@ void RunAction::EndOfRunAction(const G4Run *run) {
   }
   */
 }
-
-} // namespace B1

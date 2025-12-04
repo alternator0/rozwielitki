@@ -15,8 +15,6 @@
 #include <G4ThreeVector.hh>
 #include <array>
 
-namespace B1 {
-
 G4VPhysicalVolume *DetectorConstruction::Construct() {
 
   // Get nist material manager
@@ -440,5 +438,3 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
 
   return physWorld;
 }
-
-} // namespace B1

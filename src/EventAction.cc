@@ -3,8 +3,6 @@
 
 #include "RunAction.hh"
 
-namespace B1 {
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 EventAction::EventAction(RunAction *runAction) : fRunAction(runAction) {}
@@ -20,5 +18,3 @@ void EventAction::EndOfEventAction(const G4Event *) {
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-} // namespace B1

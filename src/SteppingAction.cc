@@ -13,7 +13,6 @@
 #include <G4ThreeVector.hh>
 #include <G4Types.hh>
 #include <G4ios.hh>
-namespace B1 {
 
 SteppingAction::SteppingAction(EventAction *eventAction)
     : fEventAction(eventAction) {}
@@ -54,4 +53,3 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
     }
   }
 }
-} // namespace B1

@@ -9,8 +9,6 @@
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <Randomize.hh>
 
-namespace B1 {
-
 // definicja czastek ktore generujemy
 PrimaryGeneratorAction::PrimaryGeneratorAction() {
   G4int n_particle = 1;
@@ -48,5 +46,3 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
 
   fParticleGun->GeneratePrimaryVertex(event);
 }
-
-} // namespace B1

@@ -1,13 +1,9 @@
-
-
 #include "ActionInitialization.hh"
 
 #include "EventAction.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
 #include "SteppingAction.hh"
-
-namespace B1 {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -31,5 +27,3 @@ void ActionInitialization::Build() const {
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-} // namespace B1
