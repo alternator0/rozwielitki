@@ -3,4 +3,4 @@
 cd build
 make
 cd ..
-./build/exampleB1
+./build/rozwielitki
