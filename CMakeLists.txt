@@ -2,7 +2,7 @@
 # Setup the project
 #
 cmake_minimum_required(VERSION 3.16...3.27)
-project(B1)
+project(rozwielitki)
 
 #---------------------------------------------------------------------------
 #Options
@@ -35,13 +35,9 @@ target_link_libraries(rozwielitki PRIVATE ${Geant4_LIBRARIES})
 # relies on these scripts being in the current working directory.
 #
 set(EXAMPLEB1_SCRIPTS
-  exampleB1.in
-  exampleB1.out
   init_vis.mac
-  run1.mac
-  run2.mac
   vis.mac
-  )
+)
 
 foreach(_script ${EXAMPLEB1_SCRIPTS})
   configure_file(
