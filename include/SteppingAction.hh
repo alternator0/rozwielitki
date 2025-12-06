@@ -12,7 +12,7 @@ class EventAction;
 
 class SteppingAction : public G4UserSteppingAction {
 public:
-  SteppingAction(EventAction *eventAction);
+  SteppingAction(EventAction *eventAction, const G4LogicalVolume *volume);
   ~SteppingAction() override = default;
 
   // method from the base class
@@ -20,7 +20,7 @@ public:
 
 private:
   EventAction *fEventAction = nullptr;
-  G4LogicalVolume *fScoringVolume = nullptr;
+  const G4LogicalVolume *fScoringVolume = nullptr;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

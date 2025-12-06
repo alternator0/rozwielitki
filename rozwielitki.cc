@@ -34,7 +34,8 @@ int main(int argc, char **argv) {
   // Set mandatory initialization classes
   //
   // Detector construction
-  runManager->SetUserInitialization(new DetectorConstruction());
+  auto detConstruction = new DetectorConstruction();
+  runManager->SetUserInitialization(detConstruction);
 
   // Physics list
   auto physicsList = new QBBC;
@@ -42,7 +43,10 @@ int main(int argc, char **argv) {
   runManager->SetUserInitialization(physicsList);
 
   // User action initialization
-  runManager->SetUserInitialization(new ActionInitialization());
+  // Przekazujemy rowniez pointer Constructora zeby pozniej przekazac przy
+  // tworzeniu stepping action jego member fScoringVolume ktory pozniej
+  // wykorzystamy do ifa
+  runManager->SetUserInitialization(new ActionInitialization(detConstruction));
 
   // Initialize visualization with the default graphics system
   auto visManager = new G4VisExecutive(argc, argv);

@@ -9,18 +9,22 @@
 #include "G4RunManager.hh"
 #include "G4Step.hh"
 #include <CLHEP/Units/SystemOfUnits.h>
+#include <G4LogicalVolume.hh>
 #include <G4SystemOfUnits.hh>
 #include <G4ThreeVector.hh>
 #include <G4Types.hh>
 #include <G4ios.hh>
 
-SteppingAction::SteppingAction(EventAction *eventAction)
-    : fEventAction(eventAction) {}
+SteppingAction::SteppingAction(EventAction *eventAction,
+                               const G4LogicalVolume *volume)
+    : fEventAction(eventAction), fScoringVolume(volume) {}
 
 // jest wywolywana po kazdym kroku czastki
 void SteppingAction::UserSteppingAction(const G4Step *step) {
-  if (step->GetPreStepPoint()->GetPhysicalVolume()->GetName() !=
-      "CellInnerTRD") {
+  // sprawdzenie czy trafiony obiekt to rozwielitka (fScoringVolume
+  // zdefiniowane w constructorze DetectorConstruction)
+  if (step->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume() ==
+      fScoringVolume) {
     if (step->GetTrack()->GetDefinition()->GetParticleName() == "gamma" ||
         step->GetTrack()->GetDefinition()->GetParticleName() == "e-") {
       G4double totalEnergyDeposit = step->GetTotalEnergyDeposit();
@@ -36,12 +40,8 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
         //  G4ThreeVector position = step->GetTrack()->GetPosition();
 
         // DEBUG
-        //
-        //
         G4cout << G4endl << " Detector got hit" << G4endl;
-        //
-        //
-        //
+
         // wpisanie danych do pliku
         auto man = G4AnalysisManager::Instance();
         man->FillNtupleDColumn(0, step->GetTrack()->GetKineticEnergy() / MeV);

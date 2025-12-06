@@ -434,7 +434,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
                     0,              // copy number
                     checkOverlaps); // overlaps checking
 
-  fScoringVolume = logicDaphnia1;
+  //  fScoringVolume = logicDaphnia1;
 
   return physWorld;
 }
