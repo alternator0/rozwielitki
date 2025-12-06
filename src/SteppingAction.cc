@@ -40,7 +40,7 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
         //  G4ThreeVector position = step->GetTrack()->GetPosition();
 
         // DEBUG
-        G4cout << G4endl << " Detector got hit" << G4endl;
+        G4cout << G4endl << "Detector got hit\n";
 
         // wpisanie danych do pliku
         auto man = G4AnalysisManager::Instance();
