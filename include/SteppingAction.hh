@@ -3,6 +3,8 @@
 
 #include "G4UserSteppingAction.hh"
 
+#include <vector>
+
 class G4LogicalVolume;
 class G4Step;
 
@@ -12,7 +14,7 @@ class EventAction;
 
 class SteppingAction : public G4UserSteppingAction {
 public:
-  SteppingAction(EventAction *eventAction, const G4LogicalVolume *volume);
+  SteppingAction(EventAction *eventAction, const std::vector<G4LogicalVolume*>& volumes);
   ~SteppingAction() override = default;
 
   // method from the base class
@@ -20,7 +22,7 @@ public:
 
 private:
   EventAction *fEventAction = nullptr;
-  const G4LogicalVolume *fScoringVolume = nullptr;
+  const std::vector<G4LogicalVolume*>& fScoringVolumes;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -1,0 +1,11 @@
+
+#/control/verbose 2
+#/control/saveHistory
+#/run/verbose 2
+
+#/run/numberOfThreads 4
+
+# Initialize kernel
+/run/initialize
+#
+/run/beamOn 500000

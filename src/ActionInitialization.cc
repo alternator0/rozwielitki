@@ -28,7 +28,7 @@ void ActionInitialization::Build() const {
   SetUserAction(eventAction);
 
   SetUserAction(
-      new SteppingAction(eventAction, fDetConstruction->GetScoringVolume()));
+      new SteppingAction(eventAction, fDetConstruction->GetScoringVolumes()));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -14,9 +14,14 @@ RunAction::RunAction() {
 void RunAction::BeginOfRunAction(const G4Run *) {
   // pointer do automatycznie tworzonego w kazdym programie analysis managera
   auto analysisManager = G4AnalysisManager::Instance();
+  analysisManager->SetVerboseLevel(1);
   // musi byc .root, bo csv rozdziela sie na kilka plikow dla kazdego watku
   // osobno
-  analysisManager->OpenFile("WynikiSymulacji.root");
+  const char* fileName = "WynikiSymulacji.root";
+
+  bool status = analysisManager->OpenFile(fileName);
+  if (!status)
+    G4cout << "Failed to open file: " << fileName << "\n";
 
   // Tworzymy tabelę
   analysisManager->CreateNtuple("Dane", "Kroki czastek");

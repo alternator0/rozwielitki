@@ -16,39 +16,43 @@
 #include <G4ios.hh>
 
 SteppingAction::SteppingAction(EventAction *eventAction,
-                               const G4LogicalVolume *volume)
-    : fEventAction(eventAction), fScoringVolume(volume) {}
+                               const std::vector<G4LogicalVolume*>& volumes)
+    : fEventAction(eventAction), fScoringVolumes(volumes) {}
 
 // jest wywolywana po kazdym kroku czastki
 void SteppingAction::UserSteppingAction(const G4Step *step) {
   // sprawdzenie czy trafiony obiekt to rozwielitka (fScoringVolume
   // zdefiniowane w constructorze DetectorConstruction)
-  if (step->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume() ==
-      fScoringVolume) {
-    if (step->GetTrack()->GetDefinition()->GetParticleName() == "gamma" ||
-        step->GetTrack()->GetDefinition()->GetParticleName() == "e-") {
-      G4double totalEnergyDeposit = step->GetTotalEnergyDeposit();
+  for (auto volume : this->fScoringVolumes) {
+    // DEBUG
+    // G4cout << "Comparing: " << step->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume() << " and " << volume << "\n";
+    if (step->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume() ==
+        volume) {
+      if (step->GetTrack()->GetDefinition()->GetParticleName() == "gamma" ||
+          step->GetTrack()->GetDefinition()->GetParticleName() == "e-") {
+        G4double totalEnergyDeposit = step->GetTotalEnergyDeposit();
 
-      if (totalEnergyDeposit > 0) {
+        if (totalEnergyDeposit > 0) {
 
-        //  step->GetPostStepPoint()->GetPhysicalVolume();
+          //  step->GetPostStepPoint()->GetPhysicalVolume();
 
-        G4double kineticEnergy = step->GetTrack()->GetKineticEnergy();
+          G4double kineticEnergy = step->GetTrack()->GetKineticEnergy();
 
-        //  G4ThreeVector totalMomentum = step->GetTrack()->GetMomentum();
+          //  G4ThreeVector totalMomentum = step->GetTrack()->GetMomentum();
 
-        //  G4ThreeVector position = step->GetTrack()->GetPosition();
+          //  G4ThreeVector position = step->GetTrack()->GetPosition();
 
-        // DEBUG
-        G4cout << G4endl << "Detector got hit\n";
+          // DEBUG
+          G4cout << G4endl << "Detector got hit\n";
 
-        // wpisanie danych do pliku
-        auto man = G4AnalysisManager::Instance();
-        man->FillNtupleDColumn(0, step->GetTrack()->GetKineticEnergy() / MeV);
-        man->FillNtupleDColumn(1, totalEnergyDeposit / MeV);
-        //  man->FillNtupleDColumn(2, totalMomentum);
-        // man->FillNtupleDColumn(3, position);
-        man->AddNtupleRow();
+          // wpisanie danych do pliku
+          auto man = G4AnalysisManager::Instance();
+          man->FillNtupleDColumn(0, step->GetTrack()->GetKineticEnergy() / MeV);
+          man->FillNtupleDColumn(1, totalEnergyDeposit / MeV);
+          //  man->FillNtupleDColumn(2, totalMomentum);
+          // man->FillNtupleDColumn(3, position);
+          man->AddNtupleRow();
+        }
       }
     }
   }

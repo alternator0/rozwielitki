@@ -1,6 +1,5 @@
 #!/bin/bash
 
-cd build
-make
-cd ..
+cmake -S . -B ./build/
+cmake --build ./build/ -j $(nproc)
 ./build/rozwielitki

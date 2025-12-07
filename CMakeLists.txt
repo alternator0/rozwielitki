@@ -2,12 +2,14 @@
 # Setup the project
 #
 cmake_minimum_required(VERSION 3.16...3.27)
-project(B1)
+project(rozwielitki)
 
 #---------------------------------------------------------------------------
 #Options
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS=ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -35,13 +37,9 @@ target_link_libraries(rozwielitki PRIVATE ${Geant4_LIBRARIES})
 # relies on these scripts being in the current working directory.
 #
 set(EXAMPLEB1_SCRIPTS
-  exampleB1.in
-  exampleB1.out
   init_vis.mac
-  run1.mac
-  run2.mac
   vis.mac
-  )
+)
 
 foreach(_script ${EXAMPLEB1_SCRIPTS})
   configure_file(
