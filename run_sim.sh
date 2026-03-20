@@ -3,6 +3,6 @@
 cmake -S . -B ./build/
 cmake --build ./build/ -j $(nproc)
 cd ./build/
-time ./rozwielitki simulation.mac | grep masa
+time ./rozwielitki simulation.mac | grep -E "SYMULACJI|masa"
 cd ..
 ./licz_energie.sh ./build/WynikiSymulacji.root
