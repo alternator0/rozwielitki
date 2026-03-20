@@ -1,8 +1,8 @@
 // definicja generatora
 
 #include "PrimaryGeneratorAction.hh"
-
 #include "CLHEP/Random/RandGauss.h"
+#include "G4GeneralParticleSource.hh"
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
 #include "G4SystemOfUnits.hh"
@@ -11,6 +11,8 @@
 
 // definicja czastek ktore generujemy
 PrimaryGeneratorAction::PrimaryGeneratorAction() {
+  fParticleGun = new G4GeneralParticleSource();
+  /*
   G4int n_particle = 1;
   fParticleGun = new G4ParticleGun(n_particle);
 
@@ -20,6 +22,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() {
   G4ParticleDefinition *particle =
       particleTable->FindParticle(particleName = "gamma");
   fParticleGun->SetParticleDefinition(particle);
+  */
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction() { delete fParticleGun; }
@@ -27,12 +30,14 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction() { delete fParticleGun; }
 // jest wywolywana na poczatku kazdej generacji czastki
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
 
-  G4double meanEnergy = 1500.0 * keV;
-  // energia jest losowana zgodnie z rozkladem gausa defaultowo, w taki sposob
-  // jak w linijce pod spodem
-  // G4double energy = CLHEP::RandGauss::shoot(meanEnergy, 1 * keV);
+  fParticleGun->GeneratePrimaryVertex(event);
 
-  fParticleGun->SetParticleEnergy(meanEnergy);
+  /*
+  G4double meanEnergy = 1500.0 * keV;
+  // energia jest losowana zgodnie z rozkladem gausa
+  G4double energy = CLHEP::RandGauss::shoot(meanEnergy, 1 * keV);
+
+  fParticleGun->SetParticleEnergy(energy);
 
   // ustawinie pozycji generatora
   G4double xPos{(G4UniformRand() - 0.5) * 8};
@@ -46,4 +51,5 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
   fParticleGun->SetParticleMomentumDirection(direction);
 
   fParticleGun->GeneratePrimaryVertex(event);
+  */
 }
