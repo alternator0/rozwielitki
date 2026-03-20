@@ -7,8 +7,8 @@
 #include "G4UIExecutive.hh"
 #include "G4UImanager.hh"
 #include "G4VisExecutive.hh"
-// #include "Randomize.hh"
-
+#include "Randomize.hh"
+#include <time.h>
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 int main(int argc, char **argv) {
@@ -19,8 +19,10 @@ int main(int argc, char **argv) {
     ui = new G4UIExecutive(argc, argv);
   }
 
-  // Optionally: choose a different Random engine...
-  // G4Random::setTheEngine(new CLHEP::MTwistEngine);
+  // Wybór silnika liczb losowych
+  G4Random::setTheEngine(new CLHEP::RanecuEngine);
+  // Ustawienie ziarna na podstawie aktualnego czasu komputera (w sekundach)
+  G4Random::setTheSeed(time(NULL));
 
   // use G4SteppingVerboseWithUnits
   G4int precision = 4;

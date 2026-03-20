@@ -17,36 +17,36 @@
 #include <array>
 #include <format>
 
+void DetectorConstruction::createDaphnia(const char *name, G4ThreeVector *pos,
+                                         G4LogicalVolume *motherVolume,
+                                         G4Material *material,
+                                         G4bool checkOverlaps = true,
+                                         G4VisAttributes *visAttr = nullptr) {
+  const G4ThreeVector daphniaDimentions{2 / 2.0 * mm, 1.5 / 2.0 * mm,
+                                        1 / 2.0 * mm};
 
-void DetectorConstruction::createDaphnia(
-    const char* name,
-    G4ThreeVector* pos,
-    G4LogicalVolume* motherVolume,
-    G4Material* material,
-    G4bool checkOverlaps = true,
-    G4VisAttributes* visAttr = nullptr
-) {
-    const G4ThreeVector daphniaDimentions{2 / 2.0 * mm, 1.5 / 2.0 * mm, 1 / 2.0 * mm};
+  G4Ellipsoid *solidDaphnia =
+      new G4Ellipsoid(name, daphniaDimentions.x(), daphniaDimentions.y(),
+                      daphniaDimentions.z());
 
-    G4Ellipsoid *solidDaphnia = new G4Ellipsoid(name, daphniaDimentions.x(), daphniaDimentions.y(), daphniaDimentions.z());
+  G4LogicalVolume *logicDaphnia =
+      new G4LogicalVolume(solidDaphnia, material, name);
 
-    G4LogicalVolume *logicDaphnia = new G4LogicalVolume(solidDaphnia, material, name);
+  if (visAttr != nullptr) {
+    logicDaphnia->SetVisAttributes(visAttr);
+  }
 
-    if (visAttr != nullptr) {
-        logicDaphnia->SetVisAttributes(visAttr);
-    }
+  new G4PVPlacement(nullptr,        // no rotation
+                    *pos,           // at position
+                    logicDaphnia,   // its logical volume
+                    name,           // its name
+                    motherVolume,   // its mother  volume
+                    false,          // no boolean operation
+                    0,              // copy number
+                    checkOverlaps); // overlaps
 
-    new G4PVPlacement(nullptr,        // no rotation
-                      *pos,    // at position
-                      logicDaphnia,  // its logical volume
-                      name,     // its name
-                      motherVolume,     // its mother  volume
-                      false,          // no boolean operation
-                      0,              // copy number
-                      checkOverlaps); // overlaps
-
-    // add Daphnia to detection
-    this->fScoringVolumes.push_back(logicDaphnia);
+  // add Daphnia to detection
+  this->fScoringVolumes.push_back(logicDaphnia);
 }
 
 // Cell sizes
@@ -65,69 +65,60 @@ constexpr G4double shapeInnerdyb = shapeOuterdyb - wallThickness * 2;
 constexpr G4double shapeInnerdz = shapeOuterdz - baseThickness;
 
 void DetectorConstruction::createCellWithDaphnia(
-    const char* name,
-    G4ThreeVector* pos,
-    G4LogicalVolume* motherVolume,
-    G4Material* cellMat,
-    G4Material* cellMatInside,
-    G4Material* daphniaMat,
-    G4bool checkOverlaps = true,
-    G4VisAttributes* visAttrInner = nullptr,
-    G4VisAttributes* visAttrOuter = nullptr,
-    G4VisAttributes* visAttrDaphnia = nullptr
-) {
-    // Cell shapes, logical volumes, physical volumes
+    const char *name, G4ThreeVector *pos, G4LogicalVolume *motherVolume,
+    G4Material *cellMat, G4Material *cellMatInside, G4Material *daphniaMat,
+    G4bool checkOverlaps = true, G4VisAttributes *visAttrInner = nullptr,
+    G4VisAttributes *visAttrOuter = nullptr,
+    G4VisAttributes *visAttrDaphnia = nullptr) {
+  // Cell shapes, logical volumes, physical volumes
 
-    auto innerName = std::format("Inner{}", name);
-    auto outerName = std::format("Outer{}", name);
-    auto cellName  = std::format("Cell{}", name);
+  auto innerName = std::format("Inner{}", name);
+  auto outerName = std::format("Outer{}", name);
+  auto cellName = std::format("Cell{}", name);
 
-    auto solidShapeOuter1 =
-    new G4Trd(outerName.c_str(), // its name
-              shapeOuterdxa / 2, shapeOuterdxb / 2, shapeOuterdya / 2,
-              shapeOuterdyb / 2, shapeOuterdz / 2); // its size
+  auto solidShapeOuter1 =
+      new G4Trd(outerName.c_str(), // its name
+                shapeOuterdxa / 2, shapeOuterdxb / 2, shapeOuterdya / 2,
+                shapeOuterdyb / 2, shapeOuterdz / 2); // its size
 
-    auto solidShapeInner1 =
-    new G4Trd(innerName.c_str(), // its name
-              shapeInnerdxa / 2, shapeInnerdxb / 2, shapeInnerdya / 2,
-              shapeInnerdyb / 2, shapeInnerdz / 2); // its size
+  auto solidShapeInner1 =
+      new G4Trd(innerName.c_str(), // its name
+                shapeInnerdxa / 2, shapeInnerdxb / 2, shapeInnerdya / 2,
+                shapeInnerdyb / 2, shapeInnerdz / 2); // its size
 
-    auto logicCellOuter1 = new G4LogicalVolume(solidShapeOuter1, // its solid
-                                               cellMat,          // its material
-                                               cellName.c_str());      // its namespace
+  auto logicCellOuter1 = new G4LogicalVolume(solidShapeOuter1,  // its solid
+                                             cellMat,           // its material
+                                             cellName.c_str()); // its namespace
 
-    auto logicCellInner1 =
-    new G4LogicalVolume(solidShapeInner1, cellMatInside, innerName.c_str());
+  auto logicCellInner1 =
+      new G4LogicalVolume(solidShapeInner1, cellMatInside, innerName.c_str());
 
-    // cell visualas
-    if (visAttrInner != nullptr)
-        logicCellInner1->SetVisAttributes(visAttrInner);
+  // cell visualas
+  if (visAttrInner != nullptr)
+    logicCellInner1->SetVisAttributes(visAttrInner);
 
-    if (visAttrOuter != nullptr)
-        logicCellOuter1->SetVisAttributes(visAttrOuter);
+  if (visAttrOuter != nullptr)
+    logicCellOuter1->SetVisAttributes(visAttrOuter);
 
-    // PhysicalVolume Cell
+  // PhysicalVolume Cell
 
-    new G4PVPlacement(nullptr,         // no rotation
-                      *pos,            // at position
-                      logicCellOuter1, // its logical volume
-                      cellName.c_str(),      // its name
-                      motherVolume,    // its mother  volume
-                      false,           // no boolean operation
-                      0,               // copy number
-                      checkOverlaps);  // overlaps checking
+  new G4PVPlacement(nullptr,          // no rotation
+                    *pos,             // at position
+                    logicCellOuter1,  // its logical volume
+                    cellName.c_str(), // its name
+                    motherVolume,     // its mother  volume
+                    false,            // no boolean operation
+                    0,                // copy number
+                    checkOverlaps);   // overlaps checking
 
-    new G4PVPlacement(nullptr,
-                      G4ThreeVector(0, 0, baseThickness / 2),
-                      logicCellInner1,
-                      innerName.c_str(),
-                      logicCellOuter1,
-                      false,
-                      0,
-                      checkOverlaps);
+  new G4PVPlacement(nullptr, G4ThreeVector(0, 0, baseThickness / 2),
+                    logicCellInner1, innerName.c_str(), logicCellOuter1, false,
+                    0, checkOverlaps);
 
-    auto daphniaPos = G4ThreeVector();
-    this->createDaphnia(std::format("Daphnia{}", name).c_str(), &daphniaPos, logicCellInner1, daphniaMat, checkOverlaps, visAttrDaphnia);
+  auto daphniaPos = G4ThreeVector();
+  this->createDaphnia(std::format("Daphnia{}", name).c_str(), &daphniaPos,
+                      logicCellInner1, daphniaMat, checkOverlaps,
+                      visAttrDaphnia);
 }
 
 G4VPhysicalVolume *DetectorConstruction::Construct() {
@@ -183,30 +174,22 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   // Daphnia
   G4Material *daphniaMat = nist->FindOrBuildMaterial("G4_WATER");
   auto visAttributesDaphnia =
-  new G4VisAttributes(G4Colour(1.0, 0.0, 0.5, 1.0)); // pink
+      new G4VisAttributes(G4Colour(1.0, 0.0, 0.5, 1.0)); // pink
   visAttributesDaphnia->SetVisibility(true);
 
   auto visAttributesInner =
-  new G4VisAttributes(G4Colour(0.0, 0.0, 1.0, 0.2)); // blue
+      new G4VisAttributes(G4Colour(0.0, 0.0, 1.0, 0.2)); // blue
   visAttributesInner->SetVisibility(true);
 
   auto visAttributesOuter =
-  new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.7)); // white
+      new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.7)); // white
   visAttributesOuter->SetVisibility(true);
 
   for (int i = 0; i < cPos.size(); i++) {
-      createCellWithDaphnia(
-          std::format("TRD{}", i).c_str(),
-                            &cPos.at(i),
-                            logicWorld,
-                            cellMat,
-                            cellMatInside,
-                            daphniaMat,
-                            checkOverlaps,
-                            visAttributesInner,
-                            visAttributesOuter,
-                            visAttributesDaphnia
-                            );
+    createCellWithDaphnia(std::format("TRD{}", i).c_str(), &cPos.at(i),
+                          logicWorld, cellMat, cellMatInside, daphniaMat,
+                          checkOverlaps, visAttributesInner, visAttributesOuter,
+                          visAttributesDaphnia);
   }
 
   //
@@ -240,6 +223,21 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
 
   //  fScoringVolume = logicDaphnia1;
 
+  G4double totalDaphniaMass{0.0};
+
+  for (auto volume : this->fScoringVolumes) {
+    totalDaphniaMass += volume->GetMass();
+  }
+
+  // Wypisujemy wynik do terminala podczas uruchamiania symulacji
+  G4cout << "\n==================================================" << G4endl;
+  G4cout << "=== PODSUMOWANIE GEOMETRII ===" << G4endl;
+  G4cout << "Liczba rozwielitek: " << this->fScoringVolumes.size() << G4endl;
+  G4cout << "Calkowita masa rozwielitek: " << totalDaphniaMass / kg << " kg"
+         << G4endl;
+  G4cout << "Calkowita masa rozwielitek: " << totalDaphniaMass / g << " g"
+         << G4endl;
+  G4cout << "==================================================\n" << G4endl;
+
   return physWorld;
 }
-

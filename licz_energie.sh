@@ -58,6 +58,23 @@ if [ -z "$FINAL_RESULT" ]; then
     # echo "$RAW_OUTPUT" >&2
     exit 1
 else
-    # Sukces - wypisujemy samą liczbę
-    echo "$FINAL_RESULT"
+    MASA_KG=$(awk 'BEGIN {print 6.28319e-06 / 4}')
+    
+    MEV_TO_JOULE=1.6022e-13
+
+    # Przekazujemy zmienne z basha do awk używając flagi -v
+    ENERGIA_J=$(awk -v wynik="$FINAL_RESULT" -v mnoznik="$MEV_TO_JOULE" 'BEGIN {print (wynik / 4) * mnoznik}')
+
+    ENERGIA_MeV=$(awk -v wynik="$FINAL_RESULT" 'BEGIN {print wynik / 4}')
+
+    # Obliczamy dawkę w Grejach (Gy = J / kg)
+    DAWKA_GY=$(awk -v j="$ENERGIA_J" -v m="$MASA_KG" 'BEGIN {print j / m}')
+
+    echo "=== WYNIKI ANALIZY ==="
+    echo "Całkowita zdeponowana energia: $FINAL_RESULT MeV"
+    echo "Energia zdeponowana w jednym obiekcie: $ENERGIA_MeV MeV"
+    echo "Masa pojedynczego obiektu:  $MASA_KG kg"
+    echo "--------------------------------------"
+    echo "POCHŁONIĘTA DAWKA: $DAWKA_GY Gy"
 fi
+

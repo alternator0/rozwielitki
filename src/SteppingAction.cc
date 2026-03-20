@@ -16,7 +16,7 @@
 #include <G4ios.hh>
 
 SteppingAction::SteppingAction(EventAction *eventAction,
-                               const std::vector<G4LogicalVolume*>& volumes)
+                               const std::vector<G4LogicalVolume *> &volumes)
     : fEventAction(eventAction), fScoringVolumes(volumes) {}
 
 // jest wywolywana po kazdym kroku czastki
@@ -25,7 +25,9 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
   // zdefiniowane w constructorze DetectorConstruction)
   for (auto volume : this->fScoringVolumes) {
     // DEBUG
-    // G4cout << "Comparing: " << step->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume() << " and " << volume << "\n";
+    // G4cout << "Comparing: " <<
+    // step->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume() << " and
+    // " << volume << "\n";
     if (step->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume() ==
         volume) {
       if (step->GetTrack()->GetDefinition()->GetParticleName() == "gamma" ||
@@ -43,7 +45,7 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
           //  G4ThreeVector position = step->GetTrack()->GetPosition();
 
           // DEBUG
-          G4cout << G4endl << "Detector got hit\n";
+          // G4cout << G4endl << "Detector got hit\n";
 
           // wpisanie danych do pliku
           auto man = G4AnalysisManager::Instance();
