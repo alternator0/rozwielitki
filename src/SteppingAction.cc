@@ -49,8 +49,10 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
 
           // wpisanie danych do pliku
           auto man = G4AnalysisManager::Instance();
-          man->FillNtupleDColumn(0, step->GetTrack()->GetKineticEnergy() / MeV);
-          man->FillNtupleDColumn(1, totalEnergyDeposit / MeV);
+          man->FillNtupleIColumn(
+              0, step->GetPreStepPoint()->GetPhysicalVolume()->GetCopyNo());
+          man->FillNtupleDColumn(1, step->GetTrack()->GetKineticEnergy() / MeV);
+          man->FillNtupleDColumn(2, totalEnergyDeposit / MeV);
           //  man->FillNtupleDColumn(2, totalMomentum);
           // man->FillNtupleDColumn(3, position);
           man->AddNtupleRow();

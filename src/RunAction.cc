@@ -17,16 +17,17 @@ void RunAction::BeginOfRunAction(const G4Run *) {
   analysisManager->SetVerboseLevel(1);
   // musi byc .root, bo csv rozdziela sie na kilka plikow dla kazdego watku
   // osobno
-  const char* fileName = "WynikiSymulacji.root";
+  const char *fileName = "WynikiSymulacji.root";
 
   bool status = analysisManager->OpenFile(fileName);
   if (!status)
     G4cout << "Failed to open file: " << fileName << "\n";
 
   // Tworzymy tabelę
-  analysisManager->CreateNtuple("Dane", "Kroki czastek");
-  analysisManager->CreateNtupleDColumn("Energia Kinetyczna");  // ID 0
-  analysisManager->CreateNtupleDColumn("Energia Zdeponowana"); // ID 1
+  analysisManager->CreateNtuple("Dane", "Trafienia");
+  analysisManager->CreateNtupleIColumn("DaphniaID");          // ID 0
+  analysisManager->CreateNtupleDColumn("EnergiaKinetyczna");  // ID 1
+  analysisManager->CreateNtupleDColumn("EnergiaZdeponowana"); // ID 2
 
   analysisManager->FinishNtuple();
 }

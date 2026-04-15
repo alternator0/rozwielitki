@@ -19,7 +19,7 @@
 
 void DetectorConstruction::createDaphnia(const char *name, G4ThreeVector *pos,
                                          G4LogicalVolume *motherVolume,
-                                         G4Material *material,
+                                         G4Material *material, int copyNo,
                                          G4bool checkOverlaps = true,
                                          G4VisAttributes *visAttr = nullptr) {
   const G4ThreeVector daphniaDimentions{2 / 2.0 * mm, 1.5 / 2.0 * mm,
@@ -42,7 +42,7 @@ void DetectorConstruction::createDaphnia(const char *name, G4ThreeVector *pos,
                     name,           // its name
                     motherVolume,   // its mother  volume
                     false,          // no boolean operation
-                    0,              // copy number
+                    copyNo,         // copy number
                     checkOverlaps); // overlaps
 
   // add Daphnia to detection
@@ -67,7 +67,8 @@ constexpr G4double shapeInnerdz = shapeOuterdz - baseThickness;
 void DetectorConstruction::createCellWithDaphnia(
     const char *name, G4ThreeVector *pos, G4LogicalVolume *motherVolume,
     G4Material *cellMat, G4Material *cellMatInside, G4Material *daphniaMat,
-    G4bool checkOverlaps = true, G4VisAttributes *visAttrInner = nullptr,
+    int copyNo, G4bool checkOverlaps = true,
+    G4VisAttributes *visAttrInner = nullptr,
     G4VisAttributes *visAttrOuter = nullptr,
     G4VisAttributes *visAttrDaphnia = nullptr) {
   // Cell shapes, logical volumes, physical volumes
@@ -108,16 +109,16 @@ void DetectorConstruction::createCellWithDaphnia(
                     cellName.c_str(), // its name
                     motherVolume,     // its mother  volume
                     false,            // no boolean operation
-                    0,                // copy number
+                    copyNo,           // copy number
                     checkOverlaps);   // overlaps checking
 
   new G4PVPlacement(nullptr, G4ThreeVector(0, 0, baseThickness / 2),
                     logicCellInner1, innerName.c_str(), logicCellOuter1, false,
-                    0, checkOverlaps);
+                    copyNo, checkOverlaps);
 
   auto daphniaPos = G4ThreeVector();
   this->createDaphnia(std::format("Daphnia{}", name).c_str(), &daphniaPos,
-                      logicCellInner1, daphniaMat, checkOverlaps,
+                      logicCellInner1, daphniaMat, copyNo, checkOverlaps,
                       visAttrDaphnia);
 }
 
@@ -187,7 +188,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
 
   for (int i = 0; i < cPos.size(); i++) {
     createCellWithDaphnia(std::format("TRD{}", i).c_str(), &cPos.at(i),
-                          logicWorld, cellMat, cellMatInside, daphniaMat,
+                          logicWorld, cellMat, cellMatInside, daphniaMat, i,
                           checkOverlaps, visAttributesInner, visAttributesOuter,
                           visAttributesDaphnia);
   }
