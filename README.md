@@ -2,6 +2,7 @@
 ![Scene with beams](Daphnia1.png)
 ![Scene2](Daphnia3.jpeg)
 ![Scene2 with beams](Daphnia4.jpeg)
+
 Symulacje uruchamiamy przez
 ```bash
 ./run_sim.sh
