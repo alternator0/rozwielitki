@@ -1,0 +1,13 @@
+/run/initialize
+
+/gps/particle ion
+/gps/ion 55 137 0 0    # Z (Cez), A (137), Charge (0), Excitation (0)
+/gps/energy 0 keV      # Energia początkowa jonu (spoczynek)
+/gps/position -167.5 -32 0 mm # TU USTWIASZ PUNKT ŹRÓDŁA
+/gps/ang/type iso      # Emisja izotropowa (we wszystkich kierunkach)
+
+/tracking/verbose 0
+/process/had/rdm/thresholdForVeryLongDecayTime 1e12 s
+/run/beamOn 100000
+exit
+

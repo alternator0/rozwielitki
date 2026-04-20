@@ -11,7 +11,7 @@ RunAction::RunAction() {
 }
 
 // wykonuje sie zawsze przed /run/beamOn
-void RunAction::BeginOfRunAction(const G4Run *) {
+void RunAction::BeginOfRunAction(const G4Run *run) {
   // pointer do automatycznie tworzonego w kazdym programie analysis managera
   auto analysisManager = G4AnalysisManager::Instance();
   analysisManager->SetVerboseLevel(1);
@@ -22,6 +22,9 @@ void RunAction::BeginOfRunAction(const G4Run *) {
   bool status = analysisManager->OpenFile(fileName);
   if (!status)
     G4cout << "Failed to open file: " << fileName << "\n";
+
+  G4cout << "Liczba generowanych zdarzeń: "
+         << run->GetNumberOfEventToBeProcessed() << G4endl;
 
   // Tworzymy tabelę
   analysisManager->CreateNtuple("Dane", "Trafienia");

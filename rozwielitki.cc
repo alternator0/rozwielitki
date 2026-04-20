@@ -1,5 +1,6 @@
 #include "ActionInitialization.hh"
 #include "DetectorConstruction.hh"
+#include "G4RadioactiveDecayPhysics.hh"
 #include "QBBC.hh"
 
 #include "G4RunManagerFactory.hh"
@@ -41,6 +42,7 @@ int main(int argc, char **argv) {
 
   // Physics list
   auto physicsList = new QBBC;
+  physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics());
   physicsList->SetVerboseLevel(1);
   runManager->SetUserInitialization(physicsList);
 

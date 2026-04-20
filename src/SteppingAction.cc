@@ -30,34 +30,34 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
     // " << volume << "\n";
     if (step->GetPreStepPoint()->GetPhysicalVolume()->GetLogicalVolume() ==
         volume) {
-      if (step->GetTrack()->GetDefinition()->GetParticleName() == "gamma" ||
-          step->GetTrack()->GetDefinition()->GetParticleName() == "e-") {
-        G4double totalEnergyDeposit = step->GetTotalEnergyDeposit();
+      // if (step->GetTrack()->GetDefinition()->GetParticleName() == "gamma" ||
+      //     step->GetTrack()->GetDefinition()->GetParticleName() == "e-") {
+      G4double totalEnergyDeposit = step->GetTotalEnergyDeposit();
 
-        if (totalEnergyDeposit > 0) {
+      if (totalEnergyDeposit > 0) {
 
-          //  step->GetPostStepPoint()->GetPhysicalVolume();
+        //  step->GetPostStepPoint()->GetPhysicalVolume();
 
-          G4double kineticEnergy = step->GetTrack()->GetKineticEnergy();
+        G4double kineticEnergy = step->GetTrack()->GetKineticEnergy();
 
-          //  G4ThreeVector totalMomentum = step->GetTrack()->GetMomentum();
+        //  G4ThreeVector totalMomentum = step->GetTrack()->GetMomentum();
 
-          //  G4ThreeVector position = step->GetTrack()->GetPosition();
+        //  G4ThreeVector position = step->GetTrack()->GetPosition();
 
-          // DEBUG
-          // G4cout << G4endl << "Detector got hit\n";
+        // DEBUG
+        // G4cout << G4endl << "Detector got hit\n";
 
-          // wpisanie danych do pliku
-          auto man = G4AnalysisManager::Instance();
-          man->FillNtupleIColumn(
-              0, step->GetPreStepPoint()->GetPhysicalVolume()->GetCopyNo());
-          man->FillNtupleDColumn(1, step->GetTrack()->GetKineticEnergy() / MeV);
-          man->FillNtupleDColumn(2, totalEnergyDeposit / MeV);
-          //  man->FillNtupleDColumn(2, totalMomentum);
-          // man->FillNtupleDColumn(3, position);
-          man->AddNtupleRow();
-        }
+        // wpisanie danych do pliku
+        auto man = G4AnalysisManager::Instance();
+        man->FillNtupleIColumn(
+            0, step->GetPreStepPoint()->GetPhysicalVolume()->GetCopyNo());
+        man->FillNtupleDColumn(1, step->GetTrack()->GetKineticEnergy() / MeV);
+        man->FillNtupleDColumn(2, totalEnergyDeposit / MeV);
+        //  man->FillNtupleDColumn(2, totalMomentum);
+        // man->FillNtupleDColumn(3, position);
+        man->AddNtupleRow();
       }
     }
   }
 }
+//}

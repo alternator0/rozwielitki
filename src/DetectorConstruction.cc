@@ -46,7 +46,7 @@ void DetectorConstruction::createDaphnia(const char *name, G4ThreeVector *pos,
                     checkOverlaps); // overlaps
 
   // add Daphnia to detection
-  this->fScoringVolumes.push_back(logicDaphnia);
+  //  this->fScoringVolumes.push_back(logicDaphnia);
 }
 
 // Cell sizes
@@ -93,6 +93,7 @@ void DetectorConstruction::createCellWithDaphnia(
 
   auto logicCellInner1 =
       new G4LogicalVolume(solidShapeInner1, cellMatInside, innerName.c_str());
+  this->fScoringVolumes.push_back(logicCellInner1);
 
   // cell visualas
   if (visAttrInner != nullptr)
@@ -116,10 +117,10 @@ void DetectorConstruction::createCellWithDaphnia(
                     logicCellInner1, innerName.c_str(), logicCellOuter1, false,
                     copyNo, checkOverlaps);
 
-  auto daphniaPos = G4ThreeVector();
-  this->createDaphnia(std::format("Daphnia{}", name).c_str(), &daphniaPos,
-                      logicCellInner1, daphniaMat, copyNo, checkOverlaps,
-                      visAttrDaphnia);
+  //  auto daphniaPos = G4ThreeVector();
+  //  this->createDaphnia(std::format("Daphnia{}", name).c_str(), &daphniaPos,
+  //                      logicCellInner1, daphniaMat, copyNo, checkOverlaps,
+  //                      visAttrDaphnia);
 }
 
 G4VPhysicalVolume *DetectorConstruction::Construct() {
@@ -135,36 +136,51 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   // World
   //
   //
-  G4double worldSizeXY = 10 * cm;
-  G4double worldSizeZ = 10 * cm;
+  G4double worldSizeX = 50 * cm;
+  G4double worldSizeY = 30 * cm;
+  G4double worldSizeZ = 15 * cm;
   G4Material *worldMat = nist->FindOrBuildMaterial("G4_AIR");
 
   auto solidWorld =
-      new G4Box("World", worldSizeXY, worldSizeXY, worldSizeZ); // name,x,y,z
+      new G4Box("World", worldSizeX, worldSizeY, worldSizeZ); // name,x,y,z
 
   auto logicWorld = new G4LogicalVolume(solidWorld, // its solid
                                         worldMat,   // its material
                                         "World");   // its name
 
-  auto physWorld = new G4PVPlacement(nullptr,         // no rotation
-                                     G4ThreeVector(), // at (0,0,0)
-                                     logicWorld,      // its logical volume
-                                     "World",         // its name
-                                     nullptr,         // its mother  volume
-                                     false,           // no boolean operation
-                                     0,               // copy number
-                                     checkOverlaps);  // overlaps checking
-                                                      //
+  auto physWorld = new G4PVPlacement(nullptr,                // no rotation
+                                     G4ThreeVector(0, 0, 0), // at (0,0,0)
+                                     logicWorld,     // its logical volume
+                                     "World",        // its name
+                                     nullptr,        // its mother  volume
+                                     false,          // no boolean operation
+                                     0,              // copy number
+                                     checkOverlaps); // overlaps checking
+                                                     //
 
   //----------------------------------------------------------------------------------------
   // Cells and daphnias
 
   // placements of centers of cells with daphnia
-  std::array<G4ThreeVector, 4> cPos = {
-      G4ThreeVector(14.2195 * mm, 14.2195 * mm, 0 * mm),
-      G4ThreeVector(-14.2195 * mm, -14.2195 * mm, 0 * mm),
-      G4ThreeVector(-14.2195 * mm, 14.2195 * mm, 0 * mm),
-      G4ThreeVector(14.2195 * mm, -14.2195 * mm, 0 * mm)
+  //  std::array<G4ThreeVector, 4> cPos = {
+  //      G4ThreeVector(14.2195 * mm, 14.2195 * mm, 0 * mm),
+  //      G4ThreeVector(-14.2195 * mm, -14.2195 * mm, 0 * mm),
+  //      G4ThreeVector(-14.2195 * mm, 14.2195 * mm, 0 * mm),
+  //      G4ThreeVector(14.2195 * mm, -14.2195 * mm, 0 * mm)
+
+  //  };
+
+  std::array<G4ThreeVector, 10> cPos = {
+      G4ThreeVector(-185 * mm, 40 * mm, 0 * mm),     // 0
+      G4ThreeVector(-185 * mm, 5 * mm, 0 * mm),      // 1
+      G4ThreeVector(-185 * mm, -30 * mm, 0 * mm),    // 2
+      G4ThreeVector(-185 * mm, -60 * mm, 0 * mm),    // 3
+      G4ThreeVector(-147.5 * mm, 17.5 * mm, 0 * mm), // 4
+      G4ThreeVector(-145 * mm, -50 * mm, 0 * mm),    // 5
+      G4ThreeVector(-65 * mm, -85 * mm, 0 * mm),     // 6
+      G4ThreeVector(60 * mm, -85 * mm, 0 * mm),      // 7
+      G4ThreeVector(60 * mm, 60 * mm, 0 * mm),       // 8
+      G4ThreeVector(90 * mm, 60 * mm, 0 * mm)        // 9
 
   };
 
@@ -197,9 +213,9 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   // Foundation pad
   //
   // properities of pad
-  G4ThreeVector padDimentions{8 * cm, 8 * cm, 2 * cm};
-  G4ThreeVector padPos{.0 / 2 * mm, .0 / 2 * mm,
-                       -(padDimentions.z() / 2. + shapeOuterdz / 2) * mm};
+  G4ThreeVector padDimentions{50 * cm, 30 * cm, 2 * cm};
+
+  G4ThreeVector padPos{0, 0, -(padDimentions.z() / 2. + shapeOuterdz / 2) * mm};
   G4Material *padMat = nist->FindOrBuildMaterial("G4_A-150_TISSUE");
   auto visAttributesPad =
       new G4VisAttributes(G4Colour(0.3, 0.3, 0.3, 1.0)); // gray
@@ -224,19 +240,19 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
 
   //  fScoringVolume = logicDaphnia1;
 
-  G4double totalDaphniaMass{0.0};
+  G4double totalWaterMass{fScoringVolumes.at(0)->GetMass()};
 
-  for (auto volume : this->fScoringVolumes) {
-    totalDaphniaMass += volume->GetMass();
-  }
+  // for (auto volume : this->fScoringVolumes) {
+  //   totalWaterMass += volume->GetMass();
+  // }
 
   // Wypisujemy wynik do terminala podczas uruchamiania symulacji
   G4cout << "\n==================================================" << G4endl;
   G4cout << "=== PODSUMOWANIE GEOMETRII ===" << G4endl;
   G4cout << "Liczba rozwielitek: " << this->fScoringVolumes.size() << G4endl;
-  G4cout << "Calkowita masa rozwielitek: " << totalDaphniaMass / kg << " kg"
+  G4cout << "Masa wody w jednej celce: " << totalWaterMass / kg << " kg"
          << G4endl;
-  G4cout << "Calkowita masa rozwielitek: " << totalDaphniaMass / g << " g"
+  G4cout << "Masa wody w jednej celce: " << totalWaterMass / g << " g"
          << G4endl;
   G4cout << "==================================================\n" << G4endl;
 
